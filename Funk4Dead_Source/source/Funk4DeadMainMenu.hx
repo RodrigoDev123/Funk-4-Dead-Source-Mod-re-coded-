@@ -19,6 +19,8 @@ class Funk4DeadMainMenu extends MusicBeatState{
     var selectedSomethin:Bool = false;
     var menucursor:FlxSprite;
     var debugKeys:Array<FlxKey>;
+
+    var zoombie:FlxSprite;
     override function create(){
         super.create();
 
@@ -99,11 +101,23 @@ class Funk4DeadMainMenu extends MusicBeatState{
 		menucursor.screenCenter();
 		FlxG.mouse.visible = true;
         changeItem(0,false);
+
+        zoombie = new FlxSprite(355.3, 348.65).makeGraphic(65, 145,0xFFFF0000);
+        add(zoombie);
     }
 
     var shitcounter:Int = 0;
+    var sine:Float=0;
     override function update(elapsed:Float){
         super.update(elapsed);
+
+        sine += elapsed;
+
+        // X: 674.7, Y:-894.4
+        var x = Math.sin(675*sine)+2.3;
+        var y = Math.sin(-894*sine)+2.3;
+        zoombie.x = x;
+        zoombie.y = y;
         
         FlxG.mouse.load(menucursor.pixels,0.9);
 

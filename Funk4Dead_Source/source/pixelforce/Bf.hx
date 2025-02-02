@@ -23,7 +23,8 @@ class Bf extends FlxSprite{
 
     public var control:PlayerControl;
 
-    public var dir:Dirs;
+    // default shoot dir
+    public var dir:Dirs = RIGHT;
 
     public function new(startPos:Array<Float>){
         this.startPos = startPos;
@@ -77,37 +78,37 @@ class Bf extends FlxSprite{
         if (control.LEFT && (!control.DOWN || !control.UP)){
             velocity.x = -SPEED;
             dir = LEFT;
-            animation.play("walk-sides", true);
+            animation.play("walk-sides", false);
             flipX = true;
-        }else{
-            animation.play("idle"+preffix,false);
+        }else if (control.LEFT_R){
+            animation.play("idle",false);
         }
 
         if (control.RIGHT && (!control.UP || !control.DOWN)){
             velocity.x = SPEED;
             dir = RIGHT;
-            animation.play("walk-sides", true);
+            animation.play("walk-sides", false);
             flipX = false;
-        }else{
-            animation.play("idle"+preffix,false);
+        }else if (control.RIGHT_R){
+            animation.play("idle",false);
         }
 
         if (control.DOWN && (!control.LEFT || !control.RIGHT)){
             velocity.y = SPEED;
             dir = DOWN;
-            animation.play("walk-down", true);
+            animation.play("walk-down", false);
             flipX = false;
-        }else{
-            animation.play("idle"+preffix,false);
+        }else if (control.DOWN_R){
+            animation.play("idle-down",false);
         }
         
         if (control.UP && (!control.RIGHT || !control.LEFT)){
-            animation.play("walk-up", true);
+            animation.play("walk-up", false);
             velocity.y = -SPEED;
             flipX = false;
             dir = UP;
-        }else{
-            animation.play("idle"+preffix,false);
+        }else if (control.UP_R){
+            animation.play("idle-up",false);
         }
             
         if (control.SHOOT){
@@ -131,6 +132,10 @@ class PlayerControl{
     public var LEFT:Bool =  false;
     public var UP:Bool = false;
     public var DOWN:Bool = false;
+    public var RIGHT_R:Bool = false;
+    public var LEFT_R:Bool =  false;
+    public var UP_R:Bool = false;
+    public var DOWN_R:Bool = false;
     public var SHOOT:Bool = false;
     public var SHOOT_R:Bool = false;
     public function set(){
@@ -138,6 +143,11 @@ class PlayerControl{
         RIGHT = FlxG.keys.anyPressed([D, FlxKey.RIGHT]);
         DOWN = FlxG.keys.anyPressed([S, FlxKey.DOWN]);
         UP = FlxG.keys.anyPressed([W, FlxKey.UP]);
+
+        LEFT_R = FlxG.keys.anyJustReleased([A, FlxKey.LEFT]);
+        RIGHT_R = FlxG.keys.anyJustReleased([D, FlxKey.RIGHT]);
+        DOWN_R = FlxG.keys.anyJustReleased([S, FlxKey.DOWN]);
+        UP_R = FlxG.keys.anyJustReleased([W, FlxKey.UP]);
 
         SHOOT = FlxG.keys.anyPressed([H, M]);
         SHOOT_R = FlxG.keys.anyJustReleased([H, M]);

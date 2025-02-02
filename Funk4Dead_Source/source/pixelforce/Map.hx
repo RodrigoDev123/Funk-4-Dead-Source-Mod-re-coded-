@@ -34,6 +34,8 @@ class Map extends MusicBeatState{
                         addSHOTGUNBullet();
                     case MP5:
                         addMP5Bullet();
+                    case GUN:
+                        addGunBullet();
                 }
             }
         },0);
@@ -45,32 +47,55 @@ class Map extends MusicBeatState{
 
     
     function addGunBullet(){
-        var bullet = new Bullet(bf);
+        var bullet = new Bullet(bf,bf.dir);
         bullet.dir = bf.dir;
         add(bullet);
         stunnTmr = 1.0;
     }
 
     function addMP5Bullet(){
-        var bullet = new Bullet(bf);
+        var bullet = new Bullet(bf,bf.dir);
         bullet.dir = bf.dir;
         add(bullet);
-        stunnTmr = 0.7;
+        stunnTmr = 0.07;
     }
 
     function addSHOTGUNBullet(){
         for (i in 0...3){
-            var bullet = new Bullet(bf);
+            var bullet = new Bullet(bf, bf.dir);
             bullet.dir = bf.dir;
             bullet.ID = i;
-            bullet.y += (bullet.height+9)*i;
-            switch (i){
-                case 0:
-                    angle = 35;
-                case 1:    
-                    angle = 0;
-                case 2:   
-                    angle = 335;
+            switch (bullet.dir){
+            case RIGHT, LEFT:    
+                bullet.y += (bullet.height+6)*i;
+                switch (i){
+                    case 0:
+                        bullet.dudeangle -= 35;
+                    case 1:    
+                        bullet.dudeangle += 0;
+                    case 2:   
+                        bullet.dudeangle -= 265;
+                }
+            case UP:    
+                bullet.x += (bullet.width+6)*i;
+                    switch (i){
+                        case 0:
+                            bullet.dudeangle += 75;
+                        case 1:    
+                            bullet.dudeangle += 0;
+                        case 2:   
+                            bullet.dudeangle += 225;
+                    }
+                case DOWN:    
+                    bullet.x += (bullet.width+6)*i;
+                        switch (i){
+                            case 0:
+                                bullet.dudeangle -= 80;
+                            case 1:    
+                                bullet.dudeangle += 0;
+                            case 2:   
+                                bullet.dudeangle -= 275;
+                        }    
             }
             add(bullet);
         }
@@ -89,7 +114,7 @@ class Map extends MusicBeatState{
         if (FlxG.keys.justPressed.TWO)
             gunType = MP5;
         if (FlxG.keys.justPressed.THREE)
-            gunType = SHOOTGUN;
+            gunType = SHOTGUN;
     }
 }
 

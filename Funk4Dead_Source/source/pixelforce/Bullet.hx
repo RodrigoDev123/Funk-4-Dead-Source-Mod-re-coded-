@@ -9,44 +9,51 @@ class Bullet extends FlxSprite{
     public var bulletSpeed:Int=600;
     public var killers:Array<Zombie> = [];
     public var attach:FlxSprite;
-    public function new (attach:FlxSprite){
+    // the angle add for angle = blahblah on update func
+    public var dudeangle:Float = 0.0;
+    public function new (attach:FlxSprite, dir:Bf.Dirs){
          super();
          this.attach = attach;
+         this.dir = dir;
          killers = [];
          loadGraphic(Paths.image("pixel/bullet", "f4d"));
          setGraphicSize(Std.int(width*CoolUtil.pixelForceZoom));
          updateHitbox();
          antialiasing = false;
         //  init posit
-         switch(dir){
-            case LEFT:
-                setPosition(attach.x+attach.width/2, (attach.y+attach.height/2)+9);
-            case RIGHT:
-                setPosition(attach.x+attach.width/2, (attach.y+attach.height/2)+9);
-            case UP:
-                setPosition((attach.x+attach.width/2)+8, (attach.y+attach.height/2));
-            case DOWN:
-                setPosition((attach.x+attach.width/2)-13, (attach.y+attach.height/2));
+        if (dir != null){
+            switch(dir){
+                case LEFT:
+                    setPosition(attach.x+attach.width/2, (attach.y+attach.height/2)+9);
+                case RIGHT:
+                    setPosition(attach.x+attach.width/2, (attach.y+attach.height/2)+9);
+                case UP:
+                    setPosition((attach.x+attach.width/2)+10, (attach.y+attach.height/2));
+                case DOWN:
+                    setPosition((attach.x+attach.width/2)+5, (attach.y+attach.height/2));
+            }
         }
     }
 
     override function update(elapsed:Float) {
         super.update(elapsed);
 
+        if (dir != null){
         switch(dir){
             case LEFT:
                 velocity.x = -bulletSpeed;
-                angle = 180;
+                angle = 180 +dudeangle;
             case RIGHT:
-                angle = 0;
+                angle = 0 + dudeangle;
                 velocity.x = bulletSpeed;
             case UP:
                 velocity.y = -bulletSpeed;
-                angle = 90;
+                angle = 90 + dudeangle;
             case DOWN:
                 velocity.y = bulletSpeed;
-                angle = 270;
+                angle = 270 + dudeangle;
         }
+       }
     }
 
     public function killingObjects(){

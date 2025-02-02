@@ -327,6 +327,19 @@ class PlayState extends MusicBeatState
 	// stores the last combo score objects in an array
 	public static var lastScore:Array<FlxSprite> = [];
 
+	////---- STAGE VARIABLES ----////
+	// carnival stage
+	   var wall:FlxSprite;
+	   var floor:FlxSprite;
+	   var coach:FlxSprite;
+	   var nick:FlxSprite;
+	   var rochelle:FlxSprite;
+	   var shade:FlxSprite;
+	   var shadow:FlxSprite;
+	// vannah stage
+	   var coachDancer:FlxSprite;
+	   var vannah_bg:FlxSprite;
+
 	override public function create()
 	{
 		//trace('Playback Rate: ' + playbackRate);
@@ -456,6 +469,10 @@ class PlayState extends MusicBeatState
 					curStage = 'schoolEvil';
 				case 'ugh' | 'guns' | 'stress':
 					curStage = 'tank';
+				case 'singer-killer':
+					curStage = "carnival";
+				case 'special-rivals':
+					curStage = "vannah";
 				default:
 					curStage = 'stage';
 			}
@@ -833,7 +850,87 @@ class PlayState extends MusicBeatState
 				if(!ClientPrefs.lowQuality) foregroundSprites.add(new BGSprite('tank4', 1300, 900, 1.5, 1.5, ['fg']));
 				foregroundSprites.add(new BGSprite('tank5', 1620, 700, 1.5, 1.5, ['fg']));
 				if(!ClientPrefs.lowQuality) foregroundSprites.add(new BGSprite('tank3', 1300, 1200, 3.5, 2.5, ['fg']));
+			case "carnival":
+				wall = new FlxSprite(0,0);
+				wall.loadGraphic(Paths.image("stages/carnival/wallBG", "f4d"));
+                wall.setPosition(-1617.05, -961.9);
+				wall.updateHitbox();
+				wall.antialiasing = ClientPrefs.globalAntialiasing;
+				add(wall);
+
+				floor = new FlxSprite(0,0);
+				floor.loadGraphic(Paths.image("stages/carnival/floorBG", "f4d"));
+				floor.setPosition(-930.1, -241.6);
+				floor.updateHitbox();
+				floor.antialiasing = ClientPrefs.globalAntialiasing;
+				add(floor);
+
+				nick = new FlxSprite(0,0);
+				nick.frames = Paths.getSparrowAtlas("stages/carnival/nickBG", "f4d");
+				nick.animation.addByPrefix("dance", "nick dance", 24, false);
+				nick.setPosition(-348.25, 145.5);
+				nick.antialiasing = ClientPrefs.globalAntialiasing;
+				nick.updateHitbox();
+				add(nick);
+
+				rochelle = new FlxSprite(0,0);
+				rochelle.frames = Paths.getSparrowAtlas("stages/carnival/rochelleBG", "f4d");
+				rochelle.animation.addByPrefix("dance", "rochelle dance", 24, false);
+				rochelle.animation.addByPrefix("shoot", "rochelle shoot", 24, false);
+				rochelle.setPosition(360.75, 161.7);
+				rochelle.antialiasing = ClientPrefs.globalAntialiasing;
+				rochelle.updateHitbox();
+				add(rochelle);
+
+				coach = new FlxSprite(0,0);
+				coach.frames = Paths.getSparrowAtlas("stages/carnival/coachBG", "f4d");
+				coach.animation.addByPrefix("dance", "coach dance", 24, false);
+				coach.setPosition(593.65, 128.35);
+				coach.antialiasing = ClientPrefs.globalAntialiasing;
+				coach.updateHitbox();
+				add(coach);
+
+				shade = new FlxSprite(0,0);
+				shade.loadGraphic(Paths.image("stages/carnival/shadeEffect", "f4d"));
+				shade.setPosition(-1655.5, -991.5);
+				shade.antialiasing = ClientPrefs.globalAntialiasing;
+				shade.updateHitbox();
+				shade.blend = SCREEN;
+
+				shadow = new FlxSprite(0,0);
+				shadow.loadGraphic(Paths.image("stages/carnival/blackShadeBG", "f4d"));
+				shadow.setPosition(-1638.5, -810.5);
+				shadow.antialiasing = ClientPrefs.globalAntialiasing;
+				shadow.scale.set(0.9,0.9);
+				shadow.updateHitbox();
+				shadow.screenCenter();
+				shadow.alpha = 0.95392;
+
+				// zoomin = 1.24;
+				// zoomout = 0.71; 
+
+			case "vannah": 
+				vannah_bg = new FlxSprite(-1924.05, -289.9);
+				vannah_bg.loadGraphic(Paths.image("stages/vannah/l4d_el_bg_xd", "f4d"));
+				vannah_bg.antialiasing = ClientPrefs.globalAntialiasing;
+				vannah_bg.updateHitbox();
+				add(vannah_bg);
+
+				var yCoach = 320;
+				coachDancer = new FlxSprite(0,yCoach);
+				coachDancer.loadGraphic("stages/vannah/coach", "f4d");
+				coachDancer.screenCenter(X);
+				coachDancer.dyn.update = function(elapsed:Float){
+					// back to y def babe!!
+					var yass = FlxMath.lerp(coachDancer.y, yCoach, CoolUtil.boundTo(elapsed*12, 0, 1));
+					coachDancer.y = yass;
+				}
+				add(coachDancer);
+
+				// zoomin: 0.57;
+				// zoomout: 0.4;
 		}
+
 
 		switch(Paths.formatToSongPath(SONG.song))
 		{
@@ -860,6 +957,9 @@ class PlayState extends MusicBeatState
 				add(halloweenWhite);
 			case 'tank':
 				add(foregroundSprites);
+			case "carnival":
+				add(shadow);
+				add(shade);
 		}
 
 		#if LUA_ALLOWED
@@ -3203,15 +3303,22 @@ class PlayState extends MusicBeatState
 					strumAngle += daNote.offsetAngle;
 					strumAlpha *= daNote.multAlpha;
 
+					var daNoteSpeedValue:Float = 0.45;
+					switch (daNote.noteType){
+						case "Shoot Note":
+							daNoteSpeedValue = 0.12;
+						default:
+							daNoteSpeedValue = 0.45;
+					}
 					if (strumScroll) //Downscroll
 					{
 						//daNote.y = (strumY + 0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed);
-						daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
+						daNote.distance = (daNoteSpeedValue * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
 					}
 					else //Upscroll
 					{
 						//daNote.y = (strumY - 0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed);
-						daNote.distance = (-0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
+						daNote.distance = (-daNoteSpeedValue * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
 					}
 
 					var angleDir = strumDirection * Math.PI / 180;
@@ -4143,9 +4250,15 @@ class PlayState extends MusicBeatState
 		note.rating = daRating.name;
 		score = daRating.score;
 
-		if(daRating.noteSplash && !note.noteSplashDisabled)
-		{
-			spawnNoteSplashOnNote(note);
+		switch (note.noteType){
+        case "Shoot Note" :
+			// yep, u can disab them
+				spawnNoteSplashOnNote(note);
+		default:	
+			if(daRating.noteSplash && !note.noteSplashDisabled)
+			{
+				spawnNoteSplashOnNote(note);
+			}
 		}
 
 		if(!practiceMode && !cpuControlled) {
@@ -4535,7 +4648,7 @@ class PlayState extends MusicBeatState
 						boyfriend.playAnim('hurt', true);
 						boyfriend.specialAnim = true;
 					}
-				health -= daNote.missHealth * healthLoss * 2.034;
+				health -= 0.55;
 				case "Boomer Note":
 					// dontohing!!
 				default:	
@@ -4706,11 +4819,6 @@ class PlayState extends MusicBeatState
 								boyfriend.playAnim('hurt', true);
 								boyfriend.specialAnim = true;
 							}
-						case "Shoot Note":
-							if(boyfriend.animation.getByName('dodge') != null) {
-								boyfriend.playAnim('dodge', true);
-								boyfriend.specialAnim = true;
-							}
 					}
 				}
 
@@ -4730,7 +4838,17 @@ class PlayState extends MusicBeatState
 				if(combo > 9999) combo = 9999;
 				popUpScore(note);
 			}
+
+			switch (note.noteType){
+			case "Shoot Note":
+				if(boyfriend.animation.getByName('dodge') != null) {
+					boyfriend.playAnim('dodge', true);
+					boyfriend.specialAnim = true;
+				}
+				rochelle.animation.play("shoot");
+			default: 		
 			health += note.hitHealth * healthGain;
+			}
 
 			if(!note.noAnimation) {
 				var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];
@@ -4825,6 +4943,11 @@ class PlayState extends MusicBeatState
 
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
 		splash.setupNoteSplash(x, y, data, skin, hue, sat, brt);
+		if (note != null){
+			if (note.noteType == "Shoot Note"){
+                splash.alpha = 1;
+			}
+		}
 		grpNoteSplashes.add(splash);
 	}
 
@@ -5091,18 +5214,6 @@ class PlayState extends MusicBeatState
 
 		switch (curStage)
 		{
-			case 'tank':
-				if(!ClientPrefs.lowQuality) tankWatchtower.dance();
-				foregroundSprites.forEach(function(spr:BGSprite)
-				{
-					spr.dance();
-				});
-
-			case 'school':
-				if(!ClientPrefs.lowQuality) {
-					bgGirls.dance();
-				}
-
 			case 'mall':
 				if(!ClientPrefs.lowQuality) {
 					upperBoppers.dance(true);
@@ -5111,32 +5222,15 @@ class PlayState extends MusicBeatState
 				if(heyTimer <= 0) bottomBoppers.dance(true);
 				santa.dance(true);
 
-			case 'limo':
-				if(!ClientPrefs.lowQuality) {
-					grpLimoDancers.forEach(function(dancer:BackgroundDancer)
-					{
-						dancer.dance();
-					});
+			case "carnival":
+				coach.animation.play("dance");
+				nick.animation.play("dance");
+				if (rochelle.animation.curAnim != null){
+					if (rochelle.animation.curAnim.name != "shoot")
+						rochelle.animation.play("dance");
 				}
-
-				if (FlxG.random.bool(10) && fastCarCanDrive)
-					fastCarDrive();
-			case "philly":
-				if (!trainMoving)
-					trainCooldown += 1;
-
-				if (curBeat % 4 == 0)
-				{
-					curLight = FlxG.random.int(0, phillyLightsColors.length - 1, [curLight]);
-					phillyWindow.color = phillyLightsColors[curLight];
-					phillyWindow.alpha = 1;
-				}
-
-				if (curBeat % 8 == 4 && FlxG.random.bool(30) && !trainMoving && trainCooldown > 8)
-				{
-					trainCooldown = FlxG.random.int(-4, 0);
-					trainStart();
-				}
+		    case "vannah":
+				coachDancer.y += 120;
 		}
 
 		if (curStage == 'spooky' && FlxG.random.bool(10) && curBeat > lightningStrikeBeat + lightningOffset)
