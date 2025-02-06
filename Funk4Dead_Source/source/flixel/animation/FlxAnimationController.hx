@@ -668,7 +668,10 @@ class FlxAnimationController implements IFlxDestroyable
 	@:allow(flixel.animation.FlxAnimation)
 	function getFrameDuration(index:Int)
 	{
-		return _sprite.frames.frames[index].duration;
+		if (_sprite.frames == null)
+			return 0.0;	
+		else
+			return _sprite.frames.frames[index].duration;
 	}
 
 	@:allow(flixel.animation)

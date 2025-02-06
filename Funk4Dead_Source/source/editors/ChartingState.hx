@@ -60,6 +60,8 @@ import sys.io.File;
 
 class ChartingState extends MusicBeatState
 {
+	var arrowIcon:FlxSprite;
+
 	public static var noteTypeList:Array<String> = //Used for backwards compatibility with 0.1 - 0.3.2 charts, though, you should add your hardcoded custom note types here too.
 	[
 		'',
@@ -93,6 +95,11 @@ class ChartingState extends MusicBeatState
 		['Screen Shake', "Value 1: Camera shake\nValue 2: HUD shake\n\nEvery value works as the following example: \"1, 0.05\".\nThe first number (1) is the duration.\nThe second number (0.05) is the intensity."],
 		['Change Character', "Value 1: Character to change (Dad, BF, GF)\nValue 2: New character's name"],
 		['Change Scroll Speed', "Value 1: Scroll Speed Multiplier (1 is default)\nValue 2: Time it takes to change fully in seconds."],
+		['Camera Zoom Modifier', "Value 1: camera Value (leave blanks to back to normality, [CAMERA ZOOMS VALUE OF YOUR stage.json])\nValue 2: mod the camHUD value (1 is default)"],
+		['Camera Zoom Interval', "Value 1: Bump Camera Rythm Zoom (def is 4)\nValue 2: The bump power (def is 0.015), the HUD cams power value sets automatically depending the bump defcam pwer value"],
+		['Camera Zoom Toggle', "Value 1: Set 1 or True To enab Bop Camera Zoom\nSet 0 or false to disab the Camera Bop Zoom"],
+		['Change Note Speed', "Value 1: The new speed value\nValue 2: If you set 'mult' the actual value\n
+		of your note speed be mult for the mult value\nbut if you set 'add' the add value, 'adds' to the actual note speed value"],
 		['Set Property', "Value 1: Variable name\nValue 2: New value"]
 	];
 

@@ -26,8 +26,14 @@ class Bf extends FlxSprite{
     // default shoot dir
     public var dir:Dirs = RIGHT;
 
-    public function new(startPos:Array<Float>){
+    /**
+        changes bf menu and playable bf dah
+    **/
+    public var menu:Bool = false;
+
+    public function new(startPos:Array<Float>, ?menu:Bool = false){
         this.startPos = startPos;
+        this.menu = menu;
         super(startPos[0],startPos[1]);
 
         /* ok, im can use png spritesheet, but its
@@ -111,10 +117,37 @@ class Bf extends FlxSprite{
             animation.play("idle-up",false);
         }
             
-        if (control.SHOOT){
-            Map.instance.spawnBullet(true);
-        }else{
-            Map.instance.spawnBullet(false);
+        if (!menu){
+            if (control.SHOOT){
+                Map.instance.spawnBullet(true);
+            }else{
+                Map.instance.spawnBullet(false);
+            }
+        }
+    }
+
+    public function playWalk(side:String="left"){
+        switch(side){
+            case "left":
+                velocity.x = -SPEED;    
+                velocity.y = 0;    
+                animation.play("walk-sides", false);
+                flipX = true;
+            case "right":
+                velocity.x = SPEED;
+                velocity.y = 0;    
+                animation.play("walk-sides", false);
+                flipX = false;
+            case "down":
+                velocity.y = SPEED;
+                velocity.x = 0;    
+                animation.play("walk-down", false);
+                flipX = false;
+            case "up":
+                animation.play("walk-up", false);
+                velocity.y = -SPEED;
+                velocity.x = 0;    
+                flipX = false;
         }
     }
 }

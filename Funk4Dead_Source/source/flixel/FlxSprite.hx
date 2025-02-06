@@ -773,6 +773,7 @@ class FlxSprite extends FlxObject
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+		if (animation != null)
 		updateAnimation(elapsed);
 
         if (dyn.update != null){

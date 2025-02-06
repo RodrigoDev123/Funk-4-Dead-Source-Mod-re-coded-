@@ -177,6 +177,10 @@ class PlayState extends MusicBeatState
 	public var camZooming:Bool = false;
 	public var camZoomingMult:Float = 1;
 	public var camZoomingDecay:Float = 1;
+
+	public var cameraZoomInterval:Int = 4;
+	public var cameraZoomPower:Float = 0.015;
+
 	private var curSong:String = "";
 
 	public var gfSpeed:Int = 1;
@@ -910,6 +914,7 @@ class PlayState extends MusicBeatState
 				// zoomout = 0.71; 
 
 			case "vannah": 
+				GameOverSubstate.characterName = 'hunter-dead';
 				vannah_bg = new FlxSprite(-1924.05, -289.9);
 				vannah_bg.loadGraphic(Paths.image("stages/vannah/l4d_el_bg_xd", "f4d"));
 				vannah_bg.antialiasing = ClientPrefs.globalAntialiasing;
@@ -918,7 +923,7 @@ class PlayState extends MusicBeatState
 
 				var yCoach = 320;
 				coachDancer = new FlxSprite(0,yCoach);
-				coachDancer.loadGraphic("stages/vannah/coach", "f4d");
+				coachDancer.loadGraphic(Paths.image("stages/vannah/coach", "f4d"));
 				coachDancer.screenCenter(X);
 				coachDancer.dyn.update = function(elapsed:Float){
 					// back to y def babe!!
@@ -3543,8 +3548,49 @@ class PlayState extends MusicBeatState
 		return pressed;
 	}
 
+	/**
+		iShowSpeed???!?!?!? (line 3553)
+	**/
+	public var daSpeed:Float = 0.45;
+
 	public function triggerEventNote(eventName:String, value1:String, value2:String) {
 		switch(eventName) {
+			case 'Change Note Speed':
+				var val1 = Std.parseFloat(value1);
+
+				if (value2 == "mult")
+				daSpeed *= val1;
+				else if (value2 == "add")
+				daSpeed += val1;
+				else
+				daSpeed *= val1;		
+			case 'Camera Zoom Toggle':
+				var value = (value1 == "1" || value1 == "true");
+				if (value1 == "0" || value1 == "false")
+					value = false;
+
+				camZooming = value;
+            case 'Camera Zoom Modifier':
+			    var camdef = value1;
+				if (camdef == "" || camdef == " " || camdef == "default" || camdef == "def"){ /**|| camdef == "yourpussyonmydick"**/
+				// sorry for the copy paset
+				  var stageData:StageFile = StageData.getStageFile(curStage);
+				  camdef = Std.string(stageData.defaultZoom);
+				}
+				var camhud = Std.parseFloat(value2);
+
+				defaultCamZoom = Std.parseFloat(camdef);
+				camHUD.zoom = camhud;
+
+			case 'Camera Zoom Interval':
+                var valu = Std.parseInt(value1);
+				var val2 = Std.parseFloat(value2);
+
+				cameraZoomInterval = valu;
+			
+				if (val2 > 0.85) // jeje, dont hate me?? ooooh i think shitmeafak
+				cameraZoomPower = val2;
+
 			case 'Dadbattle Spotlight':
 				var val:Null<Int> = Std.parseInt(value1);
 				if(val == null) val = 0;
@@ -5188,6 +5234,14 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
+		if (curBeat % cameraZoomInterval == 0){
+			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.camZooms)
+			{
+				FlxG.camera.zoom += 0.015 * camZoomingMult;
+				camHUD.zoom += 0.03 * camZoomingMult;
+			}
+		}
+
 		if (generatedMusic)
 		{
 			notes.sort(FlxSort.byY, ClientPrefs.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
@@ -5252,12 +5306,6 @@ class PlayState extends MusicBeatState
 			if (generatedMusic && !endingSong && !isCameraOnForcedPos)
 			{
 				moveCameraSection();
-			}
-
-			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.camZooms)
-			{
-				FlxG.camera.zoom += 0.015 * camZoomingMult;
-				camHUD.zoom += 0.03 * camZoomingMult;
 			}
 
 			if (SONG.notes[curSection].changeBPM)

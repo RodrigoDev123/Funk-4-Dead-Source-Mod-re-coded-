@@ -122,7 +122,7 @@ class Funk4DeadMainMenu extends MusicBeatState{
         FlxG.mouse.load(menucursor.pixels,0.9);
 
         if (FlxG.keys.justPressed.EIGHT){
-            FlxG.switchState(new pixelforce.Map());
+            FlxG.switchState(new pixelforce.PlayerSelectMenu());
         }
 
         if (controls.UI_LEFT_P){
