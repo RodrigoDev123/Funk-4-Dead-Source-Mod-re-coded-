@@ -36,6 +36,11 @@ class Main extends Sprite
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 	public static var fpsVar:FPS;
 
+	/**
+		a public var enab's all of TEST func's
+	**/
+	public static var AssmanDebug:Bool = true;
+
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
 	public static function main():Void

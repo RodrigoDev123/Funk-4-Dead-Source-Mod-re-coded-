@@ -128,6 +128,15 @@ using flixel.util.FlxColorTransformUtil;
  */
 class FlxSprite extends FlxObject
 {
+	/**
+		stage editor variables	
+	**/
+	public var stageObjName:String = "";
+	/**
+		stage editor variables
+	**/
+	public var stageObjSelected:Bool = false;
+
     /**
         a fast update func!
     **/
@@ -779,6 +788,14 @@ class FlxSprite extends FlxObject
         if (dyn.update != null){
             dyn.update(elapsed);
         }
+
+		// if (stageObjName != ""){
+			if (stageObjSelected){
+                FlxColor.LIME;
+			}else{
+				FlxColor.WHITE;
+			}
+		// }
 	}
 
 	/**

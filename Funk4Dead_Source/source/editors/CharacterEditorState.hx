@@ -199,10 +199,13 @@ class CharacterEditorState extends MusicBeatState
 		UI_characterbox.selected_tab_id = 'Character';
 
 		FlxG.mouse.visible = true;
+		CoolUtil.addF4DMouse();
 		reloadCharacterOptions();
 
 		super.create();
 	}
+
+	var a:FlxSprite;
 
 	var onPixelBG:Bool = false;
 	var OFFSET_X:Float = 300;

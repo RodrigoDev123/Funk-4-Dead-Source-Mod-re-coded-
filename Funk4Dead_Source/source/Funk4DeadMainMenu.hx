@@ -10,6 +10,7 @@ import flixel.input.mouse.FlxMouseEventManager;
 import flixel.input.mouse.FlxMouseEvent;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.input.keyboard.FlxKey;
+import flixel.graphics.FlxGraphic;
 
 class Funk4DeadMainMenu extends MusicBeatState{
 
@@ -17,12 +18,16 @@ class Funk4DeadMainMenu extends MusicBeatState{
     var menuGrp:FlxTypedGroup<FlxSprite>;
     public static var curSelected:Int = 0;
     var selectedSomethin:Bool = false;
-    var menucursor:FlxSprite;
+    public var menucursor:FlxSprite;
     var debugKeys:Array<FlxKey>;
 
     var zoombie:FlxSprite;
+
+    public static var instance:Funk4DeadMainMenu;
     override function create(){
         super.create();
+
+        instance = this;
 
         #if MODS_ALLOWED
 		Paths.pushGlobalMods();
@@ -119,7 +124,8 @@ class Funk4DeadMainMenu extends MusicBeatState{
         zoombie.x = x;
         zoombie.y = y;
         
-        FlxG.mouse.load(menucursor.pixels,0.9);
+        // FlxG.mouse.load(FlxGraphic.fromBitmapData(Paths.image("f4dCursor", "f4d")));
+        FlxG.mouse.load(menucursor.pixels, 1);
 
         if (FlxG.keys.justPressed.EIGHT){
             FlxG.switchState(new pixelforce.PlayerSelectMenu());
@@ -130,6 +136,8 @@ class Funk4DeadMainMenu extends MusicBeatState{
         }
         if (controls.UI_RIGHT_P){
             changeItem(1);
+        }if (controls.ACCEPT){
+            accept();
         }
         shitcounter = 0;
         if (controls.UI_RIGHT){

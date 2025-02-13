@@ -58,8 +58,8 @@
 	<SubTexture name="Death0053" x="1632" y="2465" width="816" height="874" frameX="-1" frameY="-7" frameWidth="817" frameHeight="881"/>
 	<SubTexture name="Death0054" x="2448" y="2465" width="817" height="874" frameX="0" frameY="-7" frameWidth="817" frameHeight="881"/>
 	<SubTexture name="Death0055" x="3265" y="2465" width="817" height="874" frameX="0" frameY="-7" frameWidth="817" frameHeight="881"/>
-	<SubTexture name="Death0056" x="3265" y="2465" width="817" height="874" frameX="0" frameY="-7" frameWidth="817" frameHeight="881"/>
-	<SubTexture name="Death0057" x="3265" y="2465" width="817" height="874" frameX="-10" frameY="-7" frameWidth="817" frameHeight="881"/>
+	<SubTexture name="Death0056" x="3265" y="2465" width="817" height="874" frameX="-1" frameY="-7" frameWidth="817" frameHeight="881"/>
+	<SubTexture name="Death0057" x="3265" y="2465" width="817" height="874" frameX="-1" frameY="-7" frameWidth="817" frameHeight="881"/>
 	<SubTexture name="DeathConfirm0000" x="4082" y="2465" width="797" height="874"/>
 	<SubTexture name="DeathConfirm0001" x="4879" y="2465" width="797" height="874"/>
 	<SubTexture name="DeathConfirm0002" x="5676" y="2465" width="797" height="874"/>

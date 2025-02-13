@@ -46,6 +46,10 @@ typedef AnimArray = {
 
 class Character extends FlxSprite
 {
+	/**
+		for character UI Name
+	**/
+	public var characterUIName:String="Xx_455M4N_xX";
 	public var animOffsets:Map<String, Array<Dynamic>>;
 	public var debugMode:Bool = false;
 

@@ -146,13 +146,16 @@ class Note extends FlxSprite
 					}
 					hitCausesMiss = true;
 				case 'Shoot Note':
-					ignoreNote = mustPress;
 					reloadNote('BULLET');
 					noteSplashTexture = 'BULLETnoteSplashes';
 					colorSwap.hue = 0;
 					colorSwap.saturation = 0;
 					colorSwap.brightness = 0;
 					lowPriority = true;
+
+					if (ClientPrefs.downScroll){
+						flipY = true;
+					}
 
 					// if(isSustainNote) {
 					// 	missHealth = 0.1;
@@ -169,6 +172,10 @@ class Note extends FlxSprite
 					colorSwap.brightness = 0;
 					lowPriority = true;
 
+				
+					if (ClientPrefs.downScroll){
+						flipY = true;
+					}
 					// if(isSustainNote) {
 					// 	missHealth = 0.1;
 					// } else {

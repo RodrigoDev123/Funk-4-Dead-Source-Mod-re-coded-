@@ -15,7 +15,7 @@ class PixelForceState extends MusicBeatState {
     override function create(){
         super.create();
         application.window.width = 823;
-
+        application.window.minimized = false;
         transIn = null;
 		transOut = null;
 
@@ -70,9 +70,9 @@ class PixelForceState extends MusicBeatState {
             },3);
             case true:
             black.alpha = 1;
-            new FlxTimer().start(0.3, function(tmr){
+            new FlxTimer().start(0.5, function(tmr){
                 black.alpha -= 1/tmr.loopsLeft;
-                if (tmr.loopsLeft < 1){
+                if (tmr.loopsLeft < 2){
                     activarSioSi = true;
                 }
             },3);

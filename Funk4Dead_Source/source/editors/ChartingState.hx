@@ -1558,6 +1558,7 @@ class ChartingState extends MusicBeatState
 		}
 
 		FlxG.mouse.visible = true;//cause reasons. trust me
+		CoolUtil.addF4DMouse();
 		camPos.y = strumLine.y;
 		if(!disableAutoScrolling.checked) {
 			if (Math.ceil(strumLine.y) >= gridBG.height)

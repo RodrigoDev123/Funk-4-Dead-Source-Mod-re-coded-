@@ -40,11 +40,11 @@ class PlayerSelectMenu extends PixelForceState {
         
         if (bf.x > 674){
             bf.playWalk("up");
-        }else if (bf.y < 451){
+        } if (bf.y < 451){
             bf.playWalk("left");
-        }else if (bf.x < 80){
+        } if (bf.x < 80){
             bf.playWalk("down");
-        }else if (bf.y > 613){
+        }if (bf.y > 613){
             bf.playWalk("right");
         }
     }

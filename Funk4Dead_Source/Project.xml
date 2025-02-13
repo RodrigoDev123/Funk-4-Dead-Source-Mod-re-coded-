@@ -198,5 +198,5 @@
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	
-	<icon path="./f4d.png" />
+	<icon path="f4d.png" />
 </project>

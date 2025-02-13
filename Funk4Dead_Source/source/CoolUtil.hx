@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxSprite;
 import flixel.FlxG;
 import openfl.utils.Assets;
 import lime.utils.Assets as LimeAssets;
@@ -140,4 +141,13 @@ class CoolUtil
 	}
 
 	public static var pixelForceZoom:Float = 4.885780886;
+
+	public static function addF4DMouse(){
+			var menucursor = new FlxSprite(0,0,Paths.image("f4dCursor", "f4d"));
+			menucursor.loadGraphic(Paths.image("f4dCursor", "f4d"));
+			menucursor.antialiasing = ClientPrefs.globalAntialiasing;
+			menucursor.screenCenter();
+			FlxG.mouse.visible = true;
+			FlxG.mouse.load(menucursor.pixels,1);
+	}
 }
