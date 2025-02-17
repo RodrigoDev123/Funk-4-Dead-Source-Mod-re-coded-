@@ -127,8 +127,15 @@ class Funk4DeadMainMenu extends MusicBeatState{
         // FlxG.mouse.load(FlxGraphic.fromBitmapData(Paths.image("f4dCursor", "f4d")));
         FlxG.mouse.load(menucursor.pixels, 1);
 
-        if (FlxG.keys.justPressed.EIGHT){
-            FlxG.switchState(new pixelforce.PlayerSelectMenu());
+        if (Main.AssmanDebug)
+        {
+            if (FlxG.keys.justPressed.EIGHT){
+                FlxG.switchState(new pixelforce.PlayerSelectMenu());
+            }
+
+            if (FlxG.keys.justPressed.ONE){
+                FlxG.switchState(new editors.CharacterColorTest());
+            }
         }
 
         if (controls.UI_LEFT_P){

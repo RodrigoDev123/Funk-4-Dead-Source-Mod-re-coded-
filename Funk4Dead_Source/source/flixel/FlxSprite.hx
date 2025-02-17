@@ -129,6 +129,15 @@ using flixel.util.FlxColorTransformUtil;
 class FlxSprite extends FlxObject
 {
 	/**
+		Mod the Color stuff, on a sprite
+	**/
+	public var colorChangerShader:ColorSwap;
+	/** COLOR SWAP STUFF**/
+	public var hue:Float = 0;
+	public var sat:Float = 0;
+	public var bright:Float = 0;
+	/**END**/
+	/**
 		stage editor variables	
 	**/
 	public var stageObjName:String = "";
@@ -389,8 +398,12 @@ class FlxSprite extends FlxObject
 		super(X, Y);
 
 		useFramePixels = FlxG.renderBlit;
+
+		colorChangerShader = new ColorSwap();
+
 		if (SimpleGraphic != null)
 			loadGraphic(SimpleGraphic);
+		shader = colorChangerShader.shader;
 	}
 
 	@:noCompletion
@@ -796,6 +809,10 @@ class FlxSprite extends FlxObject
 				FlxColor.WHITE;
 			}
 		// }
+
+		colorChangerShader.hue = hue/360;
+		colorChangerShader.brightness = bright/100;
+		colorChangerShader.saturation = sat/100;
 	}
 
 	/**

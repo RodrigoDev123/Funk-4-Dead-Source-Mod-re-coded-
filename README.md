@@ -1,5 +1,6 @@
 # Funk-4-Dead-Source-Mod-re-coded-
 Funk 4 Dead Source mod Babe!! (remaked source code) pls help us and join to our server!!
+https://discord.gg/nck4yY4zPS
 
 ### CHANGES-ESPECIFICATION:
 # 12/02/2025 #

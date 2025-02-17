@@ -60,10 +60,10 @@ class F4DHealthBar extends FlxSpriteGroup{
     /** heaelth txt scale **/
     public var healthTxtScale = 40;
 
-    /** fakeHealth**/
+    /** fakeHealth FOR TEXTS **/
     public var healthValue:Int = 100;
 
-    /** health **/
+    /** health FOR HP BAR **/
     public var dahealth = 2.0;
 
     /**
@@ -91,7 +91,7 @@ class F4DHealthBar extends FlxSpriteGroup{
     /** health text **/
     public var healthTxt:FlxText;
     
-    public function new(pla:PLAYERS=PLAYER, character:Int = 4, characterName:String="AssmanBruh!"){
+    public function new(pla:PLAYERS=PLAYER, character:Int = 4, characterName:String="Carlos"){
         super();
         this.pla = pla;
         this.character = character;
@@ -169,6 +169,9 @@ class F4DHealthBar extends FlxSpriteGroup{
         healthValue = Math.round(dahealth * 50);
         nameTxt.text = characterName;
         healthTxt.text = "+ "+healthValue;
+
+        var healthass = dahealth*50;
+        flixel.math.FlxMath.lerp(healthBar.percent, healthass, CoolUtil.boundTo(elapsed*12,0,1));
     }
 
     public function calcPlayer(plaier:PLAYERS){
@@ -192,4 +195,10 @@ class F4DHealthBar extends FlxSpriteGroup{
 enum PLAYERS {
     OPPONENT;
     PLAYER;
+}
+
+enum BarType{
+    INFECTED;
+    SURVIVOR;
+    DOWNED;
 }

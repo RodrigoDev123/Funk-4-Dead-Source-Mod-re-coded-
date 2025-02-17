@@ -364,8 +364,6 @@ class PlayState extends MusicBeatState
 	// f4d ui group constant
 	var UiBarGroup:FlxTypedGroup<F4DHealthBar>;
 
-	
-
 	override public function create()
 	{
 		//trace('Playback Rate: ' + playbackRate);
@@ -661,9 +659,9 @@ class PlayState extends MusicBeatState
                 nick.setPosition(-348.25,145.5);
                 rochelle.setPosition(355.75,161.7);
                 lights.setPosition(-982,-301);
-				shade.setPosition(-1355.5,-967.5);
+				shade.setPosition(-1555.5,-967.5);
 				shade.scale.set(1, 1);
-				shadow.setPosition(-818.5,-435.5);
+				shadow.setPosition(-888.5,-435.5);
 				shadow.scale.set(0.7, 0.87);
                 clown.setPosition(-538,200);
                 staff.setPosition(1060,220);
@@ -849,6 +847,9 @@ class PlayState extends MusicBeatState
 		startCharacterLua(dad.curCharacter);
 
 		boyfriend = new Boyfriend(0, 0, SONG.player1);
+		boyfriend.hue = -0.122222222222222/360;
+		boyfriend.bright =  0.0399999999999999/100;
+		boyfriend.sat = 0.09/100;
 		startCharacterPos(boyfriend);
 		boyfriendGroup.add(boyfriend);
 		startCharacterLua(boyfriend.curCharacter);
@@ -2825,6 +2826,10 @@ class PlayState extends MusicBeatState
 	var canPause:Bool = true;
 	var limoSpeed:Float = 0;
 
+	// Camera Angle Time Value
+	var camAngleElapsed:Float = 0.0;
+	var angled:Float = 0.0;
+
 	override public function update(elapsed:Float)
 	{
 		/*if (FlxG.keys.justPressed.NINE)
@@ -2840,132 +2845,7 @@ class PlayState extends MusicBeatState
 
 		switch (curStage)
 		{
-			case 'tank':
-				moveTank(elapsed);
-			case 'schoolEvil':
-				if(!ClientPrefs.lowQuality && bgGhouls.animation.curAnim.finished) {
-					bgGhouls.visible = false;
-				}
-			case 'philly':
-				if (trainMoving)
-				{
-					trainFrameTiming += elapsed;
-
-					if (trainFrameTiming >= 1 / 24)
-					{
-						updateTrainPos();
-						trainFrameTiming = 0;
-					}
-				}
-				phillyWindow.alpha -= (Conductor.crochet / 1000) * FlxG.elapsed * 1.5;
-
-				if(phillyGlowParticles != null)
-				{
-					var i:Int = phillyGlowParticles.members.length-1;
-					while (i > 0)
-					{
-						var particle = phillyGlowParticles.members[i];
-						if(particle.alpha < 0)
-						{
-							particle.kill();
-							phillyGlowParticles.remove(particle, true);
-							particle.destroy();
-						}
-						--i;
-					}
-				}
-			case 'limo':
-				if(!ClientPrefs.lowQuality) {
-					grpLimoParticles.forEach(function(spr:BGSprite) {
-						if(spr.animation.curAnim.finished) {
-							spr.kill();
-							grpLimoParticles.remove(spr, true);
-							spr.destroy();
-						}
-					});
-
-					switch(limoKillingState) {
-						case 1:
-							limoMetalPole.x += 5000 * elapsed;
-							limoLight.x = limoMetalPole.x - 180;
-							limoCorpse.x = limoLight.x - 50;
-							limoCorpseTwo.x = limoLight.x + 35;
-
-							var dancers:Array<BackgroundDancer> = grpLimoDancers.members;
-							for (i in 0...dancers.length) {
-								if(dancers[i].x < FlxG.width * 1.5 && limoLight.x > (370 * i) + 170) {
-									switch(i) {
-										case 0 | 3:
-											if(i == 0) FlxG.sound.play(Paths.sound('dancerdeath'), 0.5);
-
-											var diffStr:String = i == 3 ? ' 2 ' : ' ';
-											var particle:BGSprite = new BGSprite('gore/noooooo', dancers[i].x + 200, dancers[i].y, 0.4, 0.4, ['hench leg spin' + diffStr + 'PINK'], false);
-											grpLimoParticles.add(particle);
-											var particle:BGSprite = new BGSprite('gore/noooooo', dancers[i].x + 160, dancers[i].y + 200, 0.4, 0.4, ['hench arm spin' + diffStr + 'PINK'], false);
-											grpLimoParticles.add(particle);
-											var particle:BGSprite = new BGSprite('gore/noooooo', dancers[i].x, dancers[i].y + 50, 0.4, 0.4, ['hench head spin' + diffStr + 'PINK'], false);
-											grpLimoParticles.add(particle);
-
-											var particle:BGSprite = new BGSprite('gore/stupidBlood', dancers[i].x - 110, dancers[i].y + 20, 0.4, 0.4, ['blood'], false);
-											particle.flipX = true;
-											particle.angle = -57.5;
-											grpLimoParticles.add(particle);
-										case 1:
-											limoCorpse.visible = true;
-										case 2:
-											limoCorpseTwo.visible = true;
-									} //Note: Nobody cares about the fifth dancer because he is mostly hidden offscreen :(
-									dancers[i].x += FlxG.width * 2;
-								}
-							}
-
-							if(limoMetalPole.x > FlxG.width * 2) {
-								resetLimoKill();
-								limoSpeed = 800;
-								limoKillingState = 2;
-							}
-
-						case 2:
-							limoSpeed -= 4000 * elapsed;
-							bgLimo.x -= limoSpeed * elapsed;
-							if(bgLimo.x > FlxG.width * 1.5) {
-								limoSpeed = 3000;
-								limoKillingState = 3;
-							}
-
-						case 3:
-							limoSpeed -= 2000 * elapsed;
-							if(limoSpeed < 1000) limoSpeed = 1000;
-
-							bgLimo.x -= limoSpeed * elapsed;
-							if(bgLimo.x < -275) {
-								limoKillingState = 4;
-								limoSpeed = 800;
-							}
-
-						case 4:
-							bgLimo.x = FlxMath.lerp(bgLimo.x, -150, CoolUtil.boundTo(elapsed * 9, 0, 1));
-							if(Math.round(bgLimo.x) == -150) {
-								bgLimo.x = -150;
-								limoKillingState = 0;
-							}
-					}
-
-					if(limoKillingState > 2) {
-						var dancers:Array<BackgroundDancer> = grpLimoDancers.members;
-						for (i in 0...dancers.length) {
-							dancers[i].x = (370 * i) + bgLimo.x + 280;
-						}
-					}
-				}
-			case 'mall':
-				if(heyTimer > 0) {
-					heyTimer -= elapsed;
-					if(heyTimer <= 0) {
-						bottomBoppers.dance(true);
-						heyTimer = 0;
-					}
-				}
+		
 		}
 
 		if(!inCutscene) {
@@ -3131,6 +3011,9 @@ class PlayState extends MusicBeatState
 
 		if (camZooming)
 		{
+			// camAngleElapsed+= elapsed;
+			// var angled = Math.sin(0.788*camAngleElapsed)*(Conductor.stepCrochet * 0.3);
+			FlxG.camera.angle = FlxMath.lerp(angled, FlxG.camera.angle, CoolUtil.boundTo(elapsed*2.22, 0, 1));
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
 			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
 		}
@@ -3197,7 +3080,9 @@ class PlayState extends MusicBeatState
 					var daNoteSpeedValue:Float = 0.45;
 					switch (daNote.noteType){
 						case "Shoot Note":
-							daNoteSpeedValue = 1.12;
+							daNoteSpeedValue = 0.67;
+						case "Boomer Note":
+							daNoteSpeedValue = 0.31;
 						default:
 							daNoteSpeedValue = daSpeed;
 					}
@@ -4717,8 +4602,9 @@ class PlayState extends MusicBeatState
 					spawnNoteSplashOnNote(note, true);
 				}	
 		    default:
-				if (health > (17 / 50))
-				health -= 0.00975;
+				if (health > (39 / 50))
+				health -= 0.00175;
+				// opphealth += 0.00083;
 		}
 
 		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
@@ -4788,8 +4674,10 @@ class PlayState extends MusicBeatState
 			// health += note.hitHealth * healthGain; boorred
 			// health += 0.023;
 			// missHealth:Float = 0.0475;
-			    oppHealth -= 0.00975;
+			if (oppHealth > (39 / 50))
+			    oppHealth -= 0.00175;
 			}
+			health += 0.00083;
 
 			if(!note.noAnimation) {
 				var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];
@@ -4838,7 +4726,7 @@ class PlayState extends MusicBeatState
 			}
 			note.wasGoodHit = true;
 			vocals.volume = 1;
-
+		
 			var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
 			var leData:Int = Math.round(Math.abs(note.noteData));
 			var leType:String = note.noteType;
